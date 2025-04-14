@@ -1,8 +1,12 @@
 {
-  description = "A collection of hello world nix flakes.";
+  description = "A containerized browser with remote access.";
 
   inputs = {
     nixpkgs.url = "nixpkgs/nixos-24.11";
+    microvm = {
+      url = "github:astro/microvm.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -21,7 +25,10 @@
         lib.genAttrs systems (
           system:
           f {
-            pkgs = nixpkgs.legacyPackages.${system};
+            pkgs = import nixpkgs {
+              inherit system;
+              config.allowUnfree = true;
+            };
             inherit system;
           }
         );
@@ -34,7 +41,7 @@
             packages = [
               pkgs.git
               pkgs.bash
-              pkgs.bashly
+              pkgs.podman
             ];
           };
         }
@@ -42,16 +49,11 @@
       packages = eachSystem (
         { pkgs, ... }:
         {
-          default =
-            let
-              commitHashShort =
-                if (builtins.hasAttr "shortRev" inputs.self) then
-                  inputs.self.shortRev
-                else
-                  inputs.self.dirtyShortRev;
-            in
-            {
-            };
+          machine =
+            (pkgs.callPackage ./dev {
+              nixpkgs = inputs.nixpkgs;
+              microvm = inputs.microvm;
+            }).config.microvm.declaredRunner;
         }
       );
     };

@@ -1,3 +1,3 @@
 # waypoint
 
-_A containerized browser with dev tools and vnc access._
+_A containerized browser with remote access._
