@@ -49,7 +49,7 @@
       packages = eachSystem (
         { pkgs, ... }:
         {
-          machine =
+          host =
             (pkgs.callPackage ./dev {
               nixpkgs = inputs.nixpkgs;
               microvm = inputs.microvm;
