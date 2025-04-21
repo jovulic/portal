@@ -29,7 +29,7 @@
   # Setup xrdp.
   services.xrdp = {
     enable = true;
-    defaultWindowManager = "startplasma-x11";
+    defaultWindowManager = "${pkgs.dbus}/bin/dbus-run-session ${pkgs.plasma-workspace}/bin/startplasma-x11";
     openFirewall = true;
   };
 
