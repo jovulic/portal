@@ -30,6 +30,7 @@ nixpkgs.lib.nixosSystem {
             guest.port = 8080;
           }
         ];
+        storeDiskType = "squashfs";
       };
 
       hardware.graphics.enable = true;
