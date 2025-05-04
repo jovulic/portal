@@ -32,6 +32,11 @@
             inherit system;
           }
         );
+      commitHashShort =
+        if (builtins.hasAttr "shortRev" inputs.self) then
+          inputs.self.shortRev
+        else
+          inputs.self.dirtyShortRev;
     in
     {
       devShells = eachSystem (
@@ -49,8 +54,16 @@
       packages = eachSystem (
         { pkgs, ... }:
         {
-          host =
-            (pkgs.callPackage ./dev {
+
+          # nix build
+          # podman load < result
+          # podman run --rm --network=host localhost/s6-overlay-example:latest
+          default = pkgs.callPackage ./target/container {
+            inherit nixpkgs;
+            tag = commitHashShort;
+          };
+          machine =
+            (pkgs.callPackage ./target/machine {
               nixpkgs = inputs.nixpkgs;
               microvm = inputs.microvm;
             }).config.microvm.declaredRunner;

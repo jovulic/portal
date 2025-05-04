@@ -1,2 +1,5 @@
 .direnv
 result
+
+# TODO: Remove this ignore once we clear that directory of past attempts.
+dmp
