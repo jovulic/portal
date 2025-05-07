@@ -1,28 +1,30 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 let
   modules = pkgs.callPackage ./modules { };
+  mergeContainerPaths = mods: lib.concatLists (lib.map (mod: mod.container.root.paths) mods);
+  concatContainerExecs =
+    mods: lib.concatStringsSep "\n" (lib.map (mod: mod.container.root.exec) mods);
 in
 pkgs.dockerTools.buildImage {
-  name = "s6-overlay-example";
-  tag = "latest";
+  name = "waypoint";
+  tag = "latest"; # TODO: replace with version/commit
   created = "now";
 
   copyToRoot = pkgs.buildEnv {
     name = "image-root";
-    paths = [
-      pkgs.dockerTools.usrBinEnv
-      pkgs.dockerTools.binSh
-      pkgs.dockerTools.caCertificates
-      pkgs.coreutils
-      pkgs.bashInteractive
-      (modules.s6.buildService {
-        name = "hello";
-        text = ''
-          echo "Hello world!"
-        '';
-      })
-    ] ++ modules.s6.container.root.paths;
+    paths =
+      [
+        pkgs.dockerTools.usrBinEnv
+        pkgs.dockerTools.binSh
+        pkgs.dockerTools.caCertificates
+        pkgs.coreutils
+        pkgs.bashInteractive
+      ]
+      ++ mergeContainerPaths [
+        modules.s6
+        modules.weston
+      ];
     pathsToLink = [
       "/bin"
       "/sbin"
@@ -32,7 +34,10 @@ pkgs.dockerTools.buildImage {
     ];
   };
 
-  runAsRoot = modules.s6.container.root.exec;
+  runAsRoot = concatContainerExecs [
+    modules.s6
+    modules.weston
+  ];
 
   config = {
     Env = [
@@ -41,3 +46,4 @@ pkgs.dockerTools.buildImage {
     Entrypoint = [ "/init" ];
   };
 }
+# podman run --rm --network=host -it localhost/waypoint:latest /bin/sh

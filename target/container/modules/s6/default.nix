@@ -39,15 +39,4 @@ in
       path = "/command";
     };
   };
-  buildService =
-    { name, text }:
-    pkgs.writeTextFile {
-      inherit name;
-      text = ''
-        #!${pkgs.execline}/bin/execlineb -P
-        ${text}
-      '';
-      destination = "/etc/services.d/${name}/run";
-      executable = true;
-    };
 }
