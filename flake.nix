@@ -54,18 +54,10 @@
       packages = eachSystem (
         { pkgs, ... }:
         {
-          # nix build
-          # podman load < result
-          # podman run --rm --network=host localhost/s6-overlay-example:latest
-          default = pkgs.callPackage ./target/container {
+          default = pkgs.callPackage ./src {
             inherit nixpkgs;
             tag = commitHashShort;
           };
-          machine =
-            (pkgs.callPackage ./target/machine {
-              nixpkgs = inputs.nixpkgs;
-              microvm = inputs.microvm;
-            }).config.microvm.declaredRunner;
         }
       );
       apps = eachSystem (
