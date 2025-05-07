@@ -54,7 +54,6 @@
       packages = eachSystem (
         { pkgs, ... }:
         {
-
           # nix build
           # podman load < result
           # podman run --rm --network=host localhost/s6-overlay-example:latest
@@ -67,6 +66,26 @@
               nixpkgs = inputs.nixpkgs;
               microvm = inputs.microvm;
             }).config.microvm.declaredRunner;
+        }
+      );
+      apps = eachSystem (
+        { pkgs, ... }:
+        let
+          createApp = text: {
+            type = "app";
+            program = "${
+              pkgs.writeShellApplication {
+                name = "script";
+                inherit text;
+              }
+            }/bin/script";
+          };
+        in
+        {
+          default = createApp ''
+            podman load < "$(nix build --print-out-paths)"
+            podman run --rm --network=host -it localhost/waypoint:latest /bin/sh
+          '';
         }
       );
     };
