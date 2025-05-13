@@ -18,12 +18,17 @@ pkgs.dockerTools.buildImage {
         pkgs.dockerTools.usrBinEnv
         pkgs.dockerTools.binSh
         pkgs.dockerTools.caCertificates
+        pkgs.util-linux
         pkgs.coreutils
         pkgs.bashInteractive
       ]
       ++ mergeContainerPaths [
         modules.s6
+        modules.user
         modules.weston
+        modules.dbus
+        modules.fonts
+        modules.google-chrome
       ];
     pathsToLink = [
       "/bin"
@@ -36,14 +41,17 @@ pkgs.dockerTools.buildImage {
 
   runAsRoot = concatContainerExecs [
     modules.s6
+    modules.user
     modules.weston
+    modules.dbus
+    modules.fonts
+    modules.google-chrome
   ];
 
   config = {
     Env = [
       "PATH=${modules.s6.container.config.path}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    ];
+    ] ++ modules.weston.container.config.env;
     Entrypoint = [ "/init" ];
   };
 }
-# podman run --rm --network=host -it localhost/waypoint:latest /bin/sh

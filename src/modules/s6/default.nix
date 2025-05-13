@@ -28,6 +28,8 @@ in
         pkgs.s6
       ];
       exec = ''
+        echo "Setting up S6..."
+
         mkdir -p /run /var
         ln -s /run /var/run
 

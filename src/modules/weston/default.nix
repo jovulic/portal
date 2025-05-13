@@ -8,6 +8,7 @@
 #   -out crt.pem \
 #   -subj "/CN=weston.local"
 let
+  name = "weston";
   xdgRuntimeDir = "/tmp/xdg-wayland";
   westonTlsKeyFile = "/etc/weston/key.pem";
   westonTlsCrtFile = "/etc/weston/crt.pem";
@@ -22,7 +23,7 @@ let
     destination = westonTlsCrtFile;
   };
   service = s6service.build {
-    name = "weston";
+    inherit name;
     runScript = ''
       export XDG_RUNTIME_DIR ${xdgRuntimeDir}
       weston --backend=rdp-backend.so \
@@ -42,9 +43,20 @@ in
         tlsCrtFile
       ] ++ s6service.listFiles service;
       exec = ''
+        echo "Setting up Weston..."
+
         mkdir -p "${xdgRuntimeDir}"
         chmod 700 "${xdgRuntimeDir}"
       '';
     };
+    config = {
+      env = [
+        "XDG_RUNTIME_DIR=/tmp/xdg-wayland"
+        "WAYLAND_DISPLAY=wayland-1"
+      ];
+    };
+  };
+  service = {
+    inherit name;
   };
 }
