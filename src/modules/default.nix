@@ -6,7 +6,14 @@ let
   weston = pkgs.callPackage ./weston { inherit s6service user; };
   dbus = pkgs.callPackage ./dbus.nix { inherit s6service; };
   fonts = pkgs.callPackage ./fonts.nix { };
-  google-chrome = pkgs.callPackage ./google-chrome.nix { inherit s6service weston dbus; };
+  google-chrome = pkgs.callPackage ./google-chrome.nix {
+    inherit
+      s6service
+      user
+      weston
+      dbus
+      ;
+  };
 in
 {
   inherit s6;

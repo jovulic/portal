@@ -1,6 +1,7 @@
 {
   pkgs,
   s6service,
+  user,
   weston,
   dbus,
   ...
@@ -14,7 +15,8 @@ let
     runScript = ''
       export XDG_RUNTIME_DIR ${weston.runtime.env.XDG_RUNTIME_DIR}
       export WAYLAND_DISPLAY ${weston.runtime.env.WAYLAND_DISPLAY}
-      google-chrome-stable \
+      export HOME ${user.users.nomad.env.HOME}
+      s6-setuidgid ${user.users.nomad.name} google-chrome-stable \
         --ozone-platform=wayland \
         --no-sandbox \
         --disable-gpu \

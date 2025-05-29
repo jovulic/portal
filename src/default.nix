@@ -39,13 +39,19 @@ pkgs.dockerTools.buildImage {
     ];
   };
 
-  runAsRoot = concatContainerExecs [
-    modules.s6
-    modules.user
-    modules.weston
-    modules.dbus
-    modules.fonts
-    modules.google-chrome
+  runAsRoot = lib.concatStringsSep "\n" [
+    ''
+      mkdir -p /tmp
+      chmod 1777 /tmp
+    ''
+    (concatContainerExecs [
+      modules.s6
+      modules.user
+      modules.weston
+      modules.dbus
+      modules.fonts
+      modules.google-chrome
+    ])
   ];
 
   config = {

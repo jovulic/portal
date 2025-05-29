@@ -37,7 +37,8 @@ let
     runScript = ''
       export HOME ${user.users.root.env.HOME}
       export XDG_RUNTIME_DIR ${xdgRuntimeDir}
-      weston \
+      export HOME ${user.users.nomad.env.HOME}
+      s6-setuidgid ${user.users.nomad.name} weston \
         --renderer=pixman \
         --backend=rdp-backend.so \
         --address=0.0.0.0 \
@@ -60,6 +61,7 @@ in
 
         mkdir -p "${xdgRuntimeDir}"
         chmod 700 "${xdgRuntimeDir}"
+        chown ${user.users.nomad.name}:${user.users.nomad.name} "${xdgRuntimeDir}"
       '';
     };
     config = {
