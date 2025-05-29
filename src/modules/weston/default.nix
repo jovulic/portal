@@ -1,4 +1,9 @@
-{ pkgs, s6service, ... }:
+{
+  pkgs,
+  s6service,
+  user,
+  ...
+}:
 # The following was used to generate the tls certificates.
 # openssl req -x509 -newkey rsa:4096 \
 #   -sha256 \
@@ -10,6 +15,7 @@
 let
   name = "weston";
   xdgRuntimeDir = "/tmp/xdg-wayland";
+  waylandDisplay = "wayland-1";
   westonTlsKeyFile = "/etc/weston/key.pem";
   westonTlsCrtFile = "/etc/weston/crt.pem";
   tlsKeyFile = pkgs.writeTextFile {
@@ -25,8 +31,11 @@ let
   service = s6service.build {
     inherit name;
     runScript = ''
+      export HOME ${user.users.root.env.HOME}
       export XDG_RUNTIME_DIR ${xdgRuntimeDir}
-      weston --backend=rdp-backend.so \
+      weston \
+        --renderer=pixman \
+        --backend=rdp-backend.so \
         --address=0.0.0.0 \
         --port=3389 \
         --rdp-tls-key=${westonTlsKeyFile} \
@@ -51,12 +60,18 @@ in
     };
     config = {
       env = [
-        "XDG_RUNTIME_DIR=/tmp/xdg-wayland"
-        "WAYLAND_DISPLAY=wayland-1"
+        "XDG_RUNTIME_DIR=${xdgRuntimeDir}"
+        "WAYLAND_DISPLAY=${waylandDisplay}"
       ];
     };
   };
   service = {
     inherit name;
+  };
+  runtime = {
+    env = {
+      XDG_RUNTIME_DIR = xdgRuntimeDir;
+      WAYLAND_DISPLAY = waylandDisplay;
+    };
   };
 }

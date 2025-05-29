@@ -12,8 +12,8 @@ let
     # TODO: I should pull the runtime and display values from the weston
     # expression. Or figure how to expose this via s6-overlay.
     runScript = ''
-      export XDG_RUNTIME_DIR /tmp/xdg-wayland
-      export WAYLAND_DISPLAY wayland-1
+      export XDG_RUNTIME_DIR ${weston.runtime.env.XDG_RUNTIME_DIR}
+      export WAYLAND_DISPLAY ${weston.runtime.env.WAYLAND_DISPLAY}
       google-chrome-stable \
         --ozone-platform=wayland \
         --no-sandbox \

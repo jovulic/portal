@@ -36,4 +36,11 @@ in
       '';
     };
   };
+  users = {
+    root = {
+      env = {
+        HOME = "/root";
+      };
+    };
+  };
 }
