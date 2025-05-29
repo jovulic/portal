@@ -46,13 +46,15 @@ in
   };
   users = {
     "${root}" = {
+      name = root;
       env = {
         HOME = "/${root}";
       };
     };
     "${nomad}" = {
+      name = nomad;
       env = {
-        HOME = "/${nomad}";
+        HOME = "/home/${nomad}";
       };
     };
   };
