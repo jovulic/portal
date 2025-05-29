@@ -5,13 +5,17 @@
   ...
 }:
 # The following was used to generate the tls certificates.
-# openssl req -x509 -newkey rsa:4096 \
+#
+# openssl req -x509 -newkey rsa:2048 \
 #   -sha256 \
 #   -nodes \
 #   -days 3650 \
 #   -keyout key.pem \
 #   -out crt.pem \
 #   -subj "/CN=weston.local"
+#
+# NB: It must be rsa:2048 otherwise you will see errors like so on connection.
+# "certificate is not RSA 2048, RDP security not supported."
 let
   name = "weston";
   xdgRuntimeDir = "/tmp/xdg-wayland";
