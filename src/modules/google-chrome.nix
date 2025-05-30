@@ -18,7 +18,6 @@ let
       export HOME ${user.users.nomad.env.HOME}
       s6-setuidgid ${user.users.nomad.name} google-chrome-stable \
         --ozone-platform=wayland \
-        --no-sandbox \
         --disable-gpu \
         --disable-software-rasterizer \
         --disable-dev-shm-usage \
