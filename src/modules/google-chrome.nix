@@ -10,12 +10,11 @@ let
   name = "google-chrome";
   service = s6service.build {
     inherit name;
-    # TODO: I should pull the runtime and display values from the weston
-    # expression. Or figure how to expose this via s6-overlay.
     runScript = ''
       export XDG_RUNTIME_DIR ${weston.runtime.env.XDG_RUNTIME_DIR}
       export WAYLAND_DISPLAY ${weston.runtime.env.WAYLAND_DISPLAY}
       export HOME ${user.users.nomad.env.HOME}
+      export DBUS_SESSION_BUS_ADDRESS "unix:path=${weston.runtime.env.XDG_RUNTIME_DIR}/bus"
       s6-setuidgid ${user.users.nomad.name} google-chrome-stable \
         --ozone-platform=wayland \
         --disable-gpu \

@@ -1,7 +1,9 @@
 {
   pkgs,
   s6service,
+  s6oneshot,
   user,
+  dbus,
   ...
 }:
 # The following was used to generate the tls certificates.
@@ -18,7 +20,7 @@
 # "certificate is not RSA 2048, RDP security not supported."
 let
   name = "weston";
-  xdgRuntimeDir = "/tmp/xdg-wayland";
+  xdgRuntimeDir = "/run/user/nomad";
   waylandDisplay = "wayland-1";
   westonTlsKeyFile = "/etc/weston/key.pem";
   westonTlsCrtFile = "/etc/weston/crt.pem";
@@ -32,11 +34,13 @@ let
     text = builtins.readFile ./crt.pem;
     destination = westonTlsCrtFile;
   };
-  service = s6service.build {
-    inherit name;
+
+  appName = "${name}-app";
+  appService = s6service.build {
+    name = appName;
     runScript = ''
-      export HOME ${user.users.root.env.HOME}
       export XDG_RUNTIME_DIR ${xdgRuntimeDir}
+      export DBUS_SESSION_BUS_ADDRESS "unix:path=${xdgRuntimeDir}/bus"
       export HOME ${user.users.nomad.env.HOME}
       s6-setuidgid ${user.users.nomad.name} weston \
         --renderer=pixman \
@@ -46,16 +50,41 @@ let
         --rdp-tls-key=${westonTlsKeyFile} \
         --rdp-tls-cert=${westonTlsCrtFile}
     '';
+    dependencies = [ dbus.service.name ];
+  };
+  dbusName = "${name}-dbus";
+  dbusService = s6service.build {
+    name = dbusName;
+    runScript = ''
+      export XDG_RUNTIME_DIR ${xdgRuntimeDir}
+      s6-setuidgid ${user.users.nomad.name} dbus-daemon --session --nofork --address="unix:path=${xdgRuntimeDir}/bus"
+    '';
+    dependencies = [ dbus.service.name ];
+  };
+  service = s6oneshot.build {
+    inherit name;
+    type = "oneshot";
+    upScript = ''
+      echo "weston ready"
+    '';
+    dependencies = [
+      appName
+      dbusName
+    ];
   };
 in
 {
   container = {
     root = {
-      paths = [
-        pkgs.weston
-        tlsKeyFile
-        tlsCrtFile
-      ] ++ s6service.listFiles service;
+      paths =
+        [
+          pkgs.weston
+          tlsKeyFile
+          tlsCrtFile
+        ]
+        ++ s6service.listFiles appService
+        ++ s6service.listFiles dbusService
+        ++ s6service.listFiles service;
       exec = ''
         echo "Setting up Weston..."
 
