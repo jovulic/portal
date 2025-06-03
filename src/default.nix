@@ -57,7 +57,7 @@ pkgs.dockerTools.buildImage {
   config = {
     Env = [
       "PATH=${modules.s6.container.config.path}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
-    ] ++ modules.weston.container.config.env;
+    ];
     Entrypoint = [ "/init" ];
   };
 }

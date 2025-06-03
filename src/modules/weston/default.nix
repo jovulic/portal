@@ -93,12 +93,6 @@ in
         chown ${user.users.nomad.name}:${user.users.nomad.name} "${xdgRuntimeDir}"
       '';
     };
-    config = {
-      env = [
-        "XDG_RUNTIME_DIR=${xdgRuntimeDir}"
-        "WAYLAND_DISPLAY=${waylandDisplay}"
-      ];
-    };
   };
   service = {
     inherit name;
