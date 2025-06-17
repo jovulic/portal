@@ -15,6 +15,7 @@
         ln -sf "${pkgs.fontconfig.out}/etc/fonts/conf.d" /etc/fonts/conf.d
 
         # Setup DejaVu fonts.
+        mkdir -p /usr/share
         ln -sf "${pkgs.dejavu_fonts.out}/share/fonts" /usr/share/fonts
 
         # Setup font cache.

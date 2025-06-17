@@ -24,6 +24,7 @@ in
         echo "Setting up timezone..."
 
         # Setup timezone data.
+        mkdir -p /usr/share
         ln -sf ${pkgs.tzdata.out}/share/zoneinfo /usr/share/zoneinfo
       '';
     };
