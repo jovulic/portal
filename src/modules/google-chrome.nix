@@ -36,24 +36,6 @@ let
       dbus.service.name
     ];
   };
-  googleChromeReadyFile = pkgs.writeTextFile {
-    name = "google-chrome-ready";
-    text = ''
-      check_chrome_ready() {
-        curl -s http://127.0.0.1:9222/json/version > /dev/null
-        return $?
-      }
-
-      echo "waiting for chrome devtools protocol to be ready..."
-      until check_chrome_ready; do
-        echo "chrome is not ready. retrying in 1 second..."
-        sleep 1
-      done
-      echo "chrome is ready!"
-    '';
-    destination = "/bin/google-chrome-ready";
-    executable = true;
-  };
 in
 {
   container = {
@@ -61,7 +43,6 @@ in
       paths = [
         pkgs.google-chrome
         pkgs.curl
-        googleChromeReadyFile
       ] ++ s6service.listFiles service;
       exec = ''
         mkdir -p "${googleChromeDataDir}"
