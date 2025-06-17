@@ -24,6 +24,7 @@ pkgs.dockerTools.buildImage {
       ]
       ++ mergeContainerPaths [
         modules.s6
+        modules.timezone
         modules.user
         modules.weston
         modules.dbus
@@ -33,8 +34,7 @@ pkgs.dockerTools.buildImage {
     pathsToLink = [
       "/bin"
       "/sbin"
-      "/usr/bin"
-      "/usr/sbin"
+      "/usr"
       "/etc"
     ];
   };
@@ -46,6 +46,7 @@ pkgs.dockerTools.buildImage {
     ''
     (concatContainerExecs [
       modules.s6
+      modules.timezone
       modules.user
       modules.weston
       modules.dbus
@@ -57,6 +58,7 @@ pkgs.dockerTools.buildImage {
   config = {
     Env = [
       "PATH=${modules.s6.container.config.path}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+      "TZ=Etc/UTC"
     ];
     Entrypoint = [ "/init" ];
   };

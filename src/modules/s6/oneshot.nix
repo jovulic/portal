@@ -1,3 +1,4 @@
+# documentation: https://skarnet.org/software/s6-rc/s6-rc-compile.html
 { pkgs, lib, ... }:
 {
   build =
@@ -5,14 +6,7 @@
       name,
       type ? "oneshot",
       upScript,
-      downScript ? ''
-        if test "$1" -eq 256 ; then
-          err=$((128 + $2))
-        else
-          err="$1"
-        fi
-        echo "$err" > /run/s6-linux-init-container-results/exitcode
-      '',
+      downScript ? null,
       dependencies ? [ ],
     }:
     lib.filterAttrs (_: attrValue: attrValue != null) {
@@ -37,7 +31,9 @@
         name = "${name}-up";
         text = ''
           #!${pkgs.execline}/bin/execlineb -P
-          ${upScript}
+          pipeline { 
+            fdmove -c 2 1 ${upScript}
+          } sed "s/^/[${name}] /"
         '';
         destination = "/etc/s6-overlay/s6-rc.d/${name}/up";
         executable = true;
@@ -49,10 +45,12 @@
           pkgs.writeTextFile {
             name = "${name}-down";
             text = ''
-              #!${pkgs.bash}/bin/bash
-              ${downScript}
+              #!${pkgs.execline}/bin/execlineb -P
+              pipeline { 
+                fdmove -c 2 1 ${downScript}
+              } sed "s/^/[${name}] /"
             '';
-            destination = "/etc/s6-overlay/s6-rc.d/${name}/finish";
+            destination = "/etc/s6-overlay/s6-rc.d/${name}/down";
             executable = true;
           }
         else

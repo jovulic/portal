@@ -1,3 +1,4 @@
+# documentation: https://skarnet.org/software/s6-rc/s6-rc-compile.html
 { pkgs, lib, ... }:
 {
   build =
@@ -33,11 +34,16 @@
       };
 
       # The "run" file defines what should be executed when the service starts.
+      #
+      # NB: The pipeline, fdmove, and sed are there to write a prefix to the
+      # service logs so we know which service is emitting which logs.
       run = pkgs.writeTextFile {
         name = "${name}-run";
         text = ''
           #!${pkgs.execline}/bin/execlineb -P
-          ${runScript}
+          pipeline { 
+            fdmove -c 2 1 ${runScript}
+          } sed "s/^/[${name}] /"
         '';
         destination = "/etc/s6-overlay/s6-rc.d/${name}/run";
         executable = true;

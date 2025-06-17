@@ -2,6 +2,7 @@
   pkgs,
   s6service,
   s6oneshot,
+  timezone,
   user,
   dbus,
   ...
@@ -61,13 +62,14 @@ let
     '';
     dependencies = [ dbus.service.name ];
   };
-  service = s6oneshot.build {
+  ready = s6oneshot.build {
     inherit name;
     type = "oneshot";
     upScript = ''
       echo "weston ready"
     '';
     dependencies = [
+      timezone.service.name
       appName
       dbusName
     ];
@@ -84,7 +86,7 @@ in
         ]
         ++ s6service.listFiles appService
         ++ s6service.listFiles dbusService
-        ++ s6service.listFiles service;
+        ++ s6oneshot.listFiles ready;
       exec = ''
         echo "Setting up Weston..."
 
