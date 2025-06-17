@@ -8,6 +8,7 @@
 }:
 let
   name = "google-chrome";
+  googleChromeDataDir = "/home/${user.users.nomad.name}/.config/google-chrome-data";
   service = s6service.build {
     inherit name;
     runScript = ''
@@ -27,6 +28,7 @@ let
         --start-fullscreen \
         --no-first-run \
         --no-default-browser-check \
+        --user-data-dir="${googleChromeDataDir}" \
         --remote-debugging-port=9222
     '';
     dependencies = [
@@ -61,7 +63,10 @@ in
         pkgs.curl
         googleChromeReadyFile
       ] ++ s6service.listFiles service;
-      exec = '''';
+      exec = ''
+        mkdir -p "${googleChromeDataDir}"
+        chown -R ${user.users.nomad.name}:${user.users.nomad.name} /home/${user.users.nomad.name}
+      '';
     };
   };
   service = {
