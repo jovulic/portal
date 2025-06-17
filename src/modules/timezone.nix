@@ -5,15 +5,6 @@
 }:
 let
   name = "timezone";
-  zoneinfo = pkgs.stdenv.mkDerivation {
-    pname = "tzdata-zoneinfo";
-    version = pkgs.tzdata.version;
-    dontUnpack = true;
-    installPhase = ''
-      mkdir -p $out/usr/share
-      ln -s ${pkgs.tzdata}/share/zoneinfo $out/usr/share/zoneinfo
-    '';
-  };
   oneshot = s6oneshot.build {
     inherit name;
     type = "oneshot";
@@ -28,9 +19,13 @@ in
   container = {
     root = {
       paths = [
-        zoneinfo
       ] ++ s6oneshot.listFiles oneshot;
-      exec = '''';
+      exec = ''
+        echo "Setting up timezone..."
+
+        # Setup timezone data.
+        ln -sf ${pkgs.tzdata.out}/share/zoneinfo /usr/share/zoneinfo
+      '';
     };
   };
   service = {
