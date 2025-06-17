@@ -36,7 +36,7 @@ in
         mkdir -p /${root}
 
         mkdir -p /home/${nomad}
-        chown ${nomad}:${nomad} /home/${nomad}
+        chown -R ${nomad}:${nomad} /home/${nomad}
       '';
     };
   };
