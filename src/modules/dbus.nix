@@ -101,20 +101,8 @@ in
 
         mkdir -p /run/dbus
 
-        echo "Ensuring D-Bus directories and machine-id exist..."
         mkdir -p /var/lib/dbus
-        if [ ! -s /var/lib/dbus/machine-id ]; then
-          echo "Generating /var/lib/dbus/machine-id"
-          dbus-uuidgen --ensure=/var/lib/dbus/machine-id
-        else
-          echo "/var/lib/dbus/machine-id already exists."
-        fi
-        if [ ! -L /etc/machine-id ] || [ "$(readlink /etc/machine-id)" != "/var/lib/dbus/machine-id" ]; then
-          echo "Linking /etc/machine-id to /var/lib/dbus/machine-id"
-          ln -fs /var/lib/dbus/machine-id /etc/machine-id
-        else
-          echo "/etc/machine-id is already correctly linked."
-        fi
+        dbus-uuidgen --ensure=/var/lib/dbus/machine-id
       '';
     };
   };
