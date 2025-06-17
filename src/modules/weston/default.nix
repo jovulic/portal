@@ -23,17 +23,28 @@ let
   name = "weston";
   xdgRuntimeDir = "/run/user/nomad";
   waylandDisplay = "wayland-1";
-  westonTlsKeyFile = "/etc/weston/key.pem";
-  westonTlsCrtFile = "/etc/weston/crt.pem";
-  tlsKeyFile = pkgs.writeTextFile {
+  westonTlsKeyPath = "/etc/xdg/weston/key.pem";
+  westonTlsCrtPath = "/etc/xdg/weston/crt.pem";
+  westonTlsKeyFile = pkgs.writeTextFile {
     name = "key.pem";
     text = builtins.readFile ./+key.pem;
-    destination = westonTlsKeyFile;
+    destination = westonTlsKeyPath;
   };
-  tlsCrtFile = pkgs.writeTextFile {
+  westonTlsCrtFile = pkgs.writeTextFile {
     name = "crt.pem";
     text = builtins.readFile ./crt.pem;
-    destination = westonTlsCrtFile;
+    destination = westonTlsCrtPath;
+  };
+  westonIniFile = pkgs.writeTextFile {
+    name = "weston.ini";
+    text = ''
+      [core]
+      idle-time=0
+
+      [shell]
+      panel-position=none
+    '';
+    destination = "/etc/xdg/weston/weston.ini";
   };
 
   appName = "${name}-app";
@@ -48,8 +59,9 @@ let
         --backend=rdp-backend.so \
         --address=0.0.0.0 \
         --port=3389 \
-        --rdp-tls-key=${westonTlsKeyFile} \
-        --rdp-tls-cert=${westonTlsCrtFile}
+        --rdp-tls-key=${westonTlsKeyPath} \
+        --rdp-tls-cert=${westonTlsCrtPath} \
+        --config="/etc/xdg/weston/weston.ini"
     '';
     dependencies = [ dbus.service.name ];
   };
@@ -81,8 +93,9 @@ in
       paths =
         [
           pkgs.weston
-          tlsKeyFile
-          tlsCrtFile
+          westonTlsKeyFile
+          westonTlsCrtFile
+          westonIniFile
         ]
         ++ s6service.listFiles appService
         ++ s6service.listFiles dbusService
