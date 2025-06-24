@@ -58,6 +58,7 @@ pkgs.dockerTools.buildImage {
   config = {
     ExposedPorts = {
       "9222/tcp" = { };
+      "3389/tcp" = { };
     };
     Env = [
       "PATH=${modules.s6.container.config.path}:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
