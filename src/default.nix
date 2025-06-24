@@ -7,7 +7,7 @@ let
     mods: lib.concatStringsSep "\n" (lib.map (mod: mod.container.root.exec) mods);
 in
 pkgs.dockerTools.buildImage {
-  name = "waypoint";
+  name = "portal";
   tag = "latest"; # TODO: replace with version/commit
   created = "now";
 

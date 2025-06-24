@@ -80,7 +80,7 @@
         {
           default = createApp ''
             podman load < "$(nix build --print-out-paths)"
-            podman run -e TZ="$TZ" --rm --network=host -it localhost/waypoint:latest /bin/sh
+            podman run -e TZ="$TZ" --rm --network=host -it localhost/portal:latest /bin/sh
           '';
         }
       );
