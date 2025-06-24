@@ -1,4 +1,10 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  version,
+  commitHashShort,
+  ...
+}:
 
 let
   modules = pkgs.callPackage ./modules { };
@@ -8,7 +14,7 @@ let
 in
 pkgs.dockerTools.buildImage {
   name = "portal";
-  tag = "latest"; # TODO: replace with version/commit
+  tag = "${version}-${commitHashShort}";
   created = "now";
 
   copyToRoot = pkgs.buildEnv {

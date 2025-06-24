@@ -32,6 +32,7 @@
             inherit system;
           }
         );
+      version = "1.0.0";
       commitHashShort =
         if (builtins.hasAttr "shortRev" inputs.self) then
           inputs.self.shortRev
@@ -59,8 +60,7 @@
         { pkgs, ... }:
         {
           default = pkgs.callPackage ./src {
-            inherit nixpkgs;
-            tag = commitHashShort;
+            inherit nixpkgs version commitHashShort;
           };
         }
       );
@@ -80,7 +80,7 @@
         {
           default = createApp ''
             podman load < "$(nix build --print-out-paths)"
-            podman run -e TZ="$TZ" --rm --network=host -it localhost/portal:latest /bin/sh
+            podman run -e TZ="$TZ" --rm --network=host -it localhost/portal:${version}-${commitHashShort} /bin/sh
           '';
         }
       );
