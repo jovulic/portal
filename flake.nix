@@ -38,6 +38,7 @@
           inputs.self.shortRev
         else
           inputs.self.dirtyShortRev;
+      containerRegistry = "ghcr.io/jovulic";
     in
     {
       devShells = eachSystem (
@@ -47,6 +48,7 @@
             packages = [
               pkgs.git
               pkgs.bash
+              pkgs.just
               pkgs.podman
             ];
             shellHook = ''
@@ -82,6 +84,22 @@
             podman load < "$(nix build --print-out-paths)"
             podman run -e TZ="$TZ" --rm --network=host -it localhost/portal:${version}-${commitHashShort} /bin/sh
           '';
+          build =
+            let
+              localImage = "localhost/portal:${version}-${commitHashShort}";
+              remoteImage = "${containerRegistry}/portal:${version}-${commitHashShort}";
+            in
+            createApp ''
+              podman load < "$(nix build --print-out-paths)"
+              podman tag ${localImage} ${remoteImage}
+            '';
+          push =
+            let
+              remoteImage = "${containerRegistry}/portal:${version}-${commitHashShort}";
+            in
+            createApp ''
+              podman push ${remoteImage}
+            '';
         }
       );
     };
