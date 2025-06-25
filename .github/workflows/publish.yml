@@ -18,6 +18,6 @@ jobs:
       - name: Build
         run: nix run .#build
       - name: Login
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | podman login ghcr.io -u ${{ github.actor }} --password-stdin
       - name: Push
         run: nix run .#push
