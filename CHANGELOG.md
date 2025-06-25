@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/jovulic/portal/compare/v0.1.2...v0.1.3) (2025-06-25)
+
+
+### General Changes
+
+* **workflow:** change for release workflow to trigger publish workflow via dispatch ([8b4019d](https://github.com/jovulic/portal/commit/8b4019d947ba617d02782627b42d07a3a160f92d))
+
 ## [0.1.2](https://github.com/jovulic/portal/compare/v0.1.1...v0.1.2) (2025-06-25)
 
 
