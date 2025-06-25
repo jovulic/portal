@@ -62,6 +62,9 @@ pkgs.dockerTools.buildImage {
   ];
 
   config = {
+    Labels = {
+      "org.opencontainers.image.source" = "https://github.com/jovulic/portal";
+    };
     ExposedPorts = {
       "9222/tcp" = { };
       "3389/tcp" = { };
