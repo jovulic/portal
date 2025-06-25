@@ -88,17 +88,21 @@
             let
               localImage = "localhost/portal:${version}-${commitHashShort}";
               remoteImage = "${containerRegistry}/portal:${version}-${commitHashShort}";
+              remoteImageShort = "${containerRegistry}/portal:${version}";
             in
             createApp ''
               podman load < "$(nix build --print-out-paths)"
               podman tag "${localImage}" "${remoteImage}"
+              podman tag "${localImage}" "${remoteImageShort}"
             '';
           push =
             let
               remoteImage = "${containerRegistry}/portal:${version}-${commitHashShort}";
+              remoteImageShort = "${containerRegistry}/portal:${version}";
             in
             createApp ''
               podman push "${remoteImage}"
+              podman push "${remoteImageShort}"
             '';
         }
       );
