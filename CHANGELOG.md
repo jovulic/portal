@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.1.5](https://github.com/jovulic/portal/compare/v0.1.4...v0.1.5) (2025-06-25)
+
+
+### Documentation
+
+* **readme:** add screenshot ([0c239bc](https://github.com/jovulic/portal/commit/0c239bcea029a7b30206744ec161e7e53d4e834f))
+* **readme:** shrink and center screenshot ([8167369](https://github.com/jovulic/portal/commit/8167369097c36d6cf13c01d586a83e27aaa0d1b9))
+* **readme:** try to place image with p instead of div ([8856d0a](https://github.com/jovulic/portal/commit/8856d0a9ac8aa29981651a735da31c795ee36730))
+* **readme:** write readme with description usage and build sections ([4444ac5](https://github.com/jovulic/portal/commit/4444ac5091ecb12d00d10954f25f84f68ef3ece2))
+
+
+### General Changes
+
+* **container:** add description to container image ([f693c80](https://github.com/jovulic/portal/commit/f693c80ff36ce9f782d990ba1e1b70ca80682382))
+
 ## [0.1.4](https://github.com/jovulic/portal/compare/v0.1.3...v0.1.4) (2025-06-25)
 
 
