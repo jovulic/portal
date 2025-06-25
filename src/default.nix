@@ -64,6 +64,7 @@ pkgs.dockerTools.buildImage {
   config = {
     Labels = {
       "org.opencontainers.image.source" = "https://github.com/jovulic/portal";
+      "org.opencontainers.image.description" = "A containerized browser with remote access.";
     };
     ExposedPorts = {
       "9222/tcp" = { };
