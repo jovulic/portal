@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/jovulic/portal/compare/v0.1.3...v0.1.4) (2025-06-25)
+
+
+### Code Refactoring
+
+* **workflow:** merge publish into release workflow ([409bc72](https://github.com/jovulic/portal/commit/409bc7298ba396c029f8d69218a809ba1c421d9c))
+
 ## [0.1.3](https://github.com/jovulic/portal/compare/v0.1.2...v0.1.3) (2025-06-25)
 
 
