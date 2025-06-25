@@ -32,7 +32,7 @@
             inherit system;
           }
         );
-      version = builtins.readFile ./version.txt;
+      version = lib.strings.removeSuffix "\n" (builtins.readFile ./version.txt);
       commitHashShort =
         if (builtins.hasAttr "shortRev" inputs.self) then
           inputs.self.shortRev
@@ -82,7 +82,7 @@
         {
           default = createApp ''
             podman load < "$(nix build --print-out-paths)"
-            podman run -e TZ="$TZ" --rm --network=host -it localhost/portal:${version}-${commitHashShort} /bin/sh
+            podman run -e TZ="$TZ" --rm --network=host -it "localhost/portal:${version}-${commitHashShort}" /bin/sh
           '';
           build =
             let
@@ -91,14 +91,14 @@
             in
             createApp ''
               podman load < "$(nix build --print-out-paths)"
-              podman tag ${localImage} ${remoteImage}
+              podman tag "${localImage}" "${remoteImage}"
             '';
           push =
             let
               remoteImage = "${containerRegistry}/portal:${version}-${commitHashShort}";
             in
             createApp ''
-              podman push ${remoteImage}
+              podman push "${remoteImage}"
             '';
         }
       );
