@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.2](https://github.com/jovulic/portal/compare/v1.0.1...v1.0.2) (2025-06-25)
+
+
+### General Changes
+
+* **nix:** tag and push both full and short images ([d5c28f1](https://github.com/jovulic/portal/commit/d5c28f11887b84ca040924b9fc64fc420a1d0fca))
+* **workflow:** update publish to work off release created trigger ([55255a8](https://github.com/jovulic/portal/commit/55255a8d9e62d2c30c4c536f0a42ddecb6946345))
+
 ## [1.0.1](https://github.com/jovulic/portal/compare/v1.0.0...v1.0.1) (2025-06-25)
 
 
