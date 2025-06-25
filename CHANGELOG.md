@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/jovulic/portal/compare/v0.1.1...v0.1.2) (2025-06-25)
+
+
+### General Changes
+
+* **workflow:** update to trigger off tags ([daee0ed](https://github.com/jovulic/portal/commit/daee0ed3932b286b07b4f55261b78985045b192b))
+
 ## [0.1.1](https://github.com/jovulic/portal/compare/v0.1.0...v0.1.1) (2025-06-25)
 
 
