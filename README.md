@@ -6,6 +6,8 @@ _A containerized browser with remote access._
 
 ## 📌 Description
 
+![Screenshot of Portal via RDP](img/screenshot.png)
+
 This project provides a containerized, remotely accessible [Google Chrome](https://www.google.com/intl/en_ca/chrome/). It runs Chrome inside a [Weston](https://wayland.pages.freedesktop.org/weston/) compositor configured for headless RDP, exposing both [RDP](https://www.freerdp.com/) access to the graphical session and [Chrome DevTools](https://chromedevtools.github.io/devtools-protocol/) over the network. The container uses [s6-overlay](https://github.com/just-containers/s6-overlay) to manage and supervise services reliably, and it’s built entirely with [Nix](https://nixos.org/) for reproducibility.
 
 The environment inside the container is configured to closely resemble a typical host system, including setup for DBus, fonts, time zone, user accounts, and more. This makes the container a minimal yet fully functional Chrome environment, ideal for remote browsing, automation, and debugging in a controlled and consistent setting.
