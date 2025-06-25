@@ -102,7 +102,8 @@ in
         mkdir -p /run/dbus
 
         mkdir -p /var/lib/dbus
-        dbus-uuidgen --ensure=/var/lib/dbus/machine-id
+        dbus-uuidgen --ensure=/etc/machine-id
+        ln -s /etc/machine-id /var/lib/dbus/machine-id
       '';
     };
   };
