@@ -7,34 +7,13 @@
   dbus,
   ...
 }:
-# The following was used to generate the tls certificates.
-#
-# openssl req -x509 -newkey rsa:2048 \
-#   -sha256 \
-#   -nodes \
-#   -days 3650 \
-#   -keyout key.pem \
-#   -out crt.pem \
-#   -subj "/CN=weston.local"
-#
-# NB: It must be rsa:2048 otherwise you will see errors like so on connection.
-# "certificate is not RSA 2048, RDP security not supported."
 let
   name = "weston";
   xdgRuntimeDir = "/run/user/nomad";
   waylandDisplay = "wayland-1";
   westonTlsKeyPath = "/etc/xdg/weston/key.pem";
   westonTlsCrtPath = "/etc/xdg/weston/crt.pem";
-  westonTlsKeyFile = pkgs.writeTextFile {
-    name = "key.pem";
-    text = builtins.readFile ./+key.pem;
-    destination = westonTlsKeyPath;
-  };
-  westonTlsCrtFile = pkgs.writeTextFile {
-    name = "crt.pem";
-    text = builtins.readFile ./crt.pem;
-    destination = westonTlsCrtPath;
-  };
+  westonIniPath = "/etc/xdg/weston/weston.ini";
   westonIniFile = pkgs.writeTextFile {
     name = "weston.ini";
     text = ''
@@ -44,7 +23,7 @@ let
       [shell]
       panel-position=none
     '';
-    destination = "/etc/xdg/weston/weston.ini";
+    destination = westonIniPath;
   };
 
   appName = "${name}-app";
@@ -61,7 +40,7 @@ let
         --port=3389 \
         --rdp-tls-key=${westonTlsKeyPath} \
         --rdp-tls-cert=${westonTlsCrtPath} \
-        --config="/etc/xdg/weston/weston.ini"
+        --config="${westonIniPath}"
     '';
     dependencies = [ dbus.service.name ];
   };
@@ -93,8 +72,7 @@ in
       paths =
         [
           pkgs.weston
-          westonTlsKeyFile
-          westonTlsCrtFile
+          pkgs.openssl
           westonIniFile
         ]
         ++ s6service.listFiles appService
@@ -102,6 +80,18 @@ in
         ++ s6oneshot.listFiles ready;
       exec = ''
         echo "Setting up Weston..."
+
+        # NB: It must be rsa:2048 otherwise you will see errors like so on
+        # connection. "certificate is not RSA 2048, RDP security not
+        # supported."
+        openssl req -x509 -newkey rsa:2048 \
+          -sha256 \
+          -nodes \
+          -days 3650 \
+          -keyout ${westonTlsKeyPath} \
+          -out ${westonTlsCrtPath} \
+          -subj "/CN=weston.local"
+        chmod 644 ${westonTlsKeyPath}
 
         mkdir -p "${xdgRuntimeDir}"
         chmod 700 "${xdgRuntimeDir}"

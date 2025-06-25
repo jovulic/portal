@@ -6,7 +6,7 @@ let
   timezone = pkgs.callPackage ./timezone.nix { inherit s6oneshot; };
   user = pkgs.callPackage ./user.nix { };
   dbus = pkgs.callPackage ./dbus.nix { inherit s6service; };
-  weston = pkgs.callPackage ./weston {
+  weston = pkgs.callPackage ./weston.nix {
     inherit
       s6service
       s6oneshot
