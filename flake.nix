@@ -32,7 +32,7 @@
             inherit system;
           }
         );
-      version = "1.0.0";
+      version = builtins.readFile ./version.txt;
       commitHashShort =
         if (builtins.hasAttr "shortRev" inputs.self) then
           inputs.self.shortRev
