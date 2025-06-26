@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/jovulic/portal/compare/v0.1.5...v0.1.6) (2025-06-26)
+
+
+### Documentation
+
+* **readme:** capitalize the title ([3a24b55](https://github.com/jovulic/portal/commit/3a24b55bf2a4e06c876b56d7c84113690088ef16))
+
 ## [0.1.5](https://github.com/jovulic/portal/compare/v0.1.4...v0.1.5) (2025-06-25)
 
 
