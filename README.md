@@ -1,6 +1,6 @@
 [![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-# portal
+# Portal
 
 _A containerized browser with remote access._
 
