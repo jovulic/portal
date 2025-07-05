@@ -23,7 +23,7 @@ podman run --rm -it \
   ghcr.io/jovulic/portal:0.1.5
 ```
 
-This will launch the container with Chrome accessible via RDP on port `3389`, and Chrome DevTools accessible on port `9222`.
+This will launch the container with Chrome accessible via RDP on port `3389` (with user `nomad`), and Chrome DevTools accessible on port `9222`.
 
 ### Setting the Timezone
 
