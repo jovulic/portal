@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.0](https://github.com/jovulic/portal/compare/v0.1.6...v0.2.0) (2025-12-02)
+
+
+### Features
+
+* update to nixos-25.11 and use jovulic/release-please-action ([b3f2a78](https://github.com/jovulic/portal/commit/b3f2a786167923f119f4f2f7ed60958639032577))
+
+
+### Bug Fixes
+
+* reference v5 of release please ([a8c4221](https://github.com/jovulic/portal/commit/a8c4221cdaf725399f26d55dabceaa9819303ecb))
+
 ## [0.1.6](https://github.com/jovulic/portal/compare/v0.1.5...v0.1.6) (2025-10-30)
 
 
