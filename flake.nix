@@ -14,24 +14,55 @@
     let
       inherit (inputs) nixpkgs;
       inherit (inputs.nixpkgs) lib;
-      systems = [
-        "aarch64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-        "x86_64-linux"
-      ];
       eachSystem =
-        f:
-        lib.genAttrs systems (
-          system:
-          f {
-            pkgs = import nixpkgs {
+        systemsOrF:
+        if builtins.isList systemsOrF then
+          f:
+          nixpkgs.lib.genAttrs systemsOrF (
+            system:
+            f {
+              pkgs = import nixpkgs {
+                inherit system;
+                config.allowUnfree = true;
+              };
               inherit system;
-              config.allowUnfree = true;
-            };
-            inherit system;
-          }
-        );
+            }
+          )
+        else
+          let
+            defaultSystems = [
+              "aarch64-linux"
+              "aarch64-darwin"
+              "x86_64-darwin"
+              "x86_64-linux"
+            ];
+          in
+          nixpkgs.lib.genAttrs defaultSystems (
+            system:
+            systemsOrF {
+              pkgs = import nixpkgs {
+                inherit system;
+                config.allowUnfree = true;
+              };
+              inherit system;
+            }
+          );
+      # EXAMPLE:
+      # devShells = eachSystem (
+      #   { pkgs, ... }:
+      #   {
+      #     default = pkgs.mkShell {
+      #       packages = [
+      #         pkgs.git
+      #         pkgs.bash
+      #         pkgs.just
+      #         pkgs.go
+      #         pkgs.toybox
+      #         pkgs.openssh
+      #       ];
+      #     };
+      #   }
+      # );
       version = lib.strings.removeSuffix "\n" (builtins.readFile ./version.txt);
       commitHashShort =
         if (builtins.hasAttr "shortRev" inputs.self) then
