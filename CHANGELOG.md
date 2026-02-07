@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/jovulic/portal/compare/v0.2.0...v0.2.1) (2026-02-07)
+
+
+### General Changes
+
+* update eachSystem to be a bit more complete ([a76f9be](https://github.com/jovulic/portal/commit/a76f9bed5e080c7616792bee73521fa493a61608))
+
 ## [0.2.0](https://github.com/jovulic/portal/compare/v0.1.6...v0.2.0) (2025-12-02)
 
 
